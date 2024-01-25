@@ -36,5 +36,5 @@ jobs:
         run: |
           echo "$KUBE_CONFIG" | base64 --decode > kubeconfig.yaml
           ls -R
-          kubectl apply -f kubernetes/deployment.yaml
-          kubectl apply -f kubernetes/service.yaml
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
