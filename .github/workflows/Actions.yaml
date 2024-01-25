@@ -1,0 +1,39 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Adjust this based on your branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker build -t samarthr8/wisecow-app:latest .
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker push samarthr8/wisecow-app:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Kubernetes
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          echo "$KUBE_CONFIG" > kubeconfig.yaml
+          kubectl apply -f kubernetes/deployment.yaml
+          kubectl apply -f kubernetes/service.yaml
