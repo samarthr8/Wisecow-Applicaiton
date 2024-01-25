@@ -34,6 +34,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
-          echo "$KUBE_CONFIG" > kubeconfig.yaml
+          echo "$KUBE_CONFIG" | base64 --decode > kubeconfig.yaml
+          ls -R
           kubectl apply -f kubernetes/deployment.yaml
           kubectl apply -f kubernetes/service.yaml
