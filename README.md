@@ -1,4 +1,4 @@
-# Cow wisdom web server application
+# Cow wisdom web server app
 
 ## Prerequisites
 
